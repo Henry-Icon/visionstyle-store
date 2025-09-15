@@ -1,7 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-  base: '/visionstyle-store/',  
   plugins: [react()],
+  base: '/visionstyle-store/',  // <-- your repo name here
 })
