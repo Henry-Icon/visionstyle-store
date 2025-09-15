@@ -24,133 +24,202 @@ const OrderContext = createContext();
 
 // --- Components (all in one file) ---
 
+// src/components/Navbar.jsx
+
+
 const Navbar = ({ navigateTo }) => {
-  const { cartItems, totalPrice, totalItems } = useContext(CartContext);
-  const { user, isLoggedIn, logout } = useContext(AuthContext);
+  const { totalPrice = 0, totalItems = 0 } = useContext(CartContext) || {};
+  const { user = null, isLoggedIn = false, logout = () => {} } = useContext(AuthContext) || {};
   const [menuOpen, setMenuOpen] = useState(false);
-  const [currency, setCurrency] = useState('NGN');
+  const [currency, setCurrency] = useState("NGN");
 
   const currencySymbol = currency === "NGN" ? "₦" : "$";
   const displayedPrice = currency === "NGN" ? totalPrice : Math.round(totalPrice / 1500);
-  const formattedPrice = displayedPrice.toLocaleString();
-  const isAdmin = user?.email === 'admin@visionstyle.com';
+  const formattedPrice = displayedPrice?.toLocaleString?.() ?? displayedPrice;
+  const isAdmin = user?.email === "admin@visionstyle.com";
 
   const handleLinkClick = (page) => {
-    navigateTo(page);
-    setMenuOpen(false); // Close menu after clicking link
+    setMenuOpen(false);
+    if (navigateTo) navigateTo(page);
   };
 
   const handleLogout = () => {
+    setMenuOpen(false);
     logout();
-    setMenuOpen(false); // Close menu after logging out
   };
 
   return (
-    <nav className="bg-gray-900 text-white p-4 md:px-8 shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center">
-        {/* Brand */}
+  <nav className="bg-black text-white sticky top-0 z-50 shadow-md">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center h-16 gap-4">
+      {/* Left: Brand */}
+      <div className="flex-shrink-0">
         <button
-          onClick={() => handleLinkClick('home')}
-          className="text-2xl font-bold transition-transform transform hover:scale-105"
+          onClick={() => handleLinkClick("home")}
+          className="text-2xl font-extrabold tracking-tight text-yellow-500 hover:text-yellow-400 transition whitespace-nowrap"
+          aria-label="Vision Styles home"
         >
           Vision Style’s
         </button>
+      </div>
 
-        {/* Hamburger toggle (mobile only) */}
-        <div className="flex items-center md:hidden space-x-4">
-          <button onClick={() => handleLinkClick('cart')} className="relative text-white hover:text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.19.988.707.988H19m-4 0a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-            <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-              {totalItems}
-            </span>
+      {/* Center: Desktop links */}
+      <div className="hidden md:flex md:flex-1 md:justify-center md:items-center gap-6">
+        <button onClick={() => handleLinkClick("home")} className="hover:text-yellow-400 whitespace-nowrap">
+          Home
+        </button>
+        <button onClick={() => handleLinkClick("shop")} className="hover:text-yellow-400 whitespace-nowrap">
+          Shop
+        </button>
+        {isAdmin && (
+          <button onClick={() => handleLinkClick("admin")} className="hover:text-yellow-400 whitespace-nowrap">
+            Admin
+          </button>
+        )}
+        {isLoggedIn && (
+          <button onClick={() => handleLinkClick("my-orders")} className="hover:text-yellow-400 whitespace-nowrap">
+            My Orders
+          </button>
+        )}
+      </div>
+
+      {/* Right: auth + cart */}
+      <div className="hidden md:flex items-center gap-3">
+        <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400 whitespace-nowrap">
+          🛒 ({totalItems})
+        </button>
+
+        <span className="text-sm font-semibold text-gray-300 whitespace-nowrap">
+          {currencySymbol}{formattedPrice}
+        </span>
+
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
+        >
+          <option value="NGN">₦ NGN</option>
+          <option value="USD">$ USD</option>
+        </select>
+
+        {!isLoggedIn ? (
+          <>
+            <button
+              onClick={() => handleLinkClick("login")}
+              className="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => handleLinkClick("signup")}
+              className="bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
+            >
+              Sign Up
+            </button>
+          </>
+        ) : (
+          <>
+            <span className="text-gray-300 whitespace-nowrap">{user.email}</span>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
+            >
+              Logout
+            </button>
+          </>
+        )}
+      </div>
+
+      {/* Hamburger (mobile) */}
+      <div className="md:hidden ml-auto">
+        <button
+          onClick={() => setMenuOpen((s) => !s)}
+          className="text-2xl p-2 text-yellow-500 hover:text-yellow-400"
+        >
+          {menuOpen ? "✖" : "☰"}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  {/* Mobile dropdown */}
+  <div
+    className={`md:hidden transition-max-h duration-300 ease-in-out overflow-hidden ${
+      menuOpen ? "max-h-96" : "max-h-0"
+    } bg-black px-4 pb-4 border-t border-yellow-600`}
+  >
+    <div className="space-y-3 pt-3">
+      <button onClick={() => handleLinkClick("home")} className="block w-full text-left hover:text-yellow-400">
+        Home
+      </button>
+      <button onClick={() => handleLinkClick("shop")} className="block w-full text-left hover:text-yellow-400">
+        Shop
+      </button>
+      {isAdmin && (
+        <button onClick={() => handleLinkClick("admin")} className="block w-full text-left hover:text-yellow-400">
+          Admin
+        </button>
+      )}
+      {isLoggedIn && (
+        <button onClick={() => handleLinkClick("my-orders")} className="block w-full text-left hover:text-yellow-400">
+          My Orders
+        </button>
+      )}
+
+      {!isLoggedIn ? (
+        <>
+          <button
+            onClick={() => handleLinkClick("login")}
+            className="block w-full text-left bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
+          >
+            Login
           </button>
           <button
-            className="text-2xl"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => handleLinkClick("signup")}
+            className="block w-full text-left bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
           >
-            {menuOpen ? "✖" : "☰"}
+            Sign Up
           </button>
-        </div>
-
-        {/* Links (desktop and mobile) */}
-        <div
-          className={`
-            absolute md:static top-16 right-4
-            bg-gray-900 md:bg-transparent rounded-lg md:rounded-none
-            p-6 md:p-0
-            flex-col md:flex-row items-end md:items-center
-            gap-4 md:gap-8 shadow-xl md:shadow-none
-            ${menuOpen ? "flex" : "hidden md:flex"}
-          `}
-        >
-          <button onClick={() => handleLinkClick('home')} className="hover:text-gray-400">Home</button>
-          <button onClick={() => handleLinkClick('shop')} className="hover:text-gray-400">Shop</button>
-
-          {isAdmin && (
-            <button onClick={() => handleLinkClick('admin')} className="hover:text-gray-400">Admin</button>
-          )}
-
-          {isLoggedIn && (
-            <button onClick={() => handleLinkClick('my-orders')} className="hover:text-gray-400">My Orders</button>
-          )}
-
-          <div className="hidden md:flex items-center gap-4">
-            <button onClick={() => handleLinkClick('cart')} className="relative hover:text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.19.988.707.988H19m-4 0a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                {totalItems}
-              </span>
-            </button>
-            <span className="text-sm font-semibold text-gray-400">
-              {currencySymbol}{formattedPrice}
-            </span>
-          </div>
-
-          {!isLoggedIn ? (
-            <>
-              <button
-                onClick={() => handleLinkClick('login')}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors"
-              >
-                Login
-              </button>
-              <button
-                onClick={() => handleLinkClick('signup')}
-                className="hover:text-gray-400"
-              >
-                Sign Up
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col md:flex-row items-end md:items-center gap-4">
-              <span className="text-sm font-semibold text-gray-400">{user.email}</span>
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full text-sm transition-colors"
-              >
-                Logout
-              </button>
-            </div>
-          )}
-
-          {/* Currency Switcher */}
-          <select
-            value={currency}
-            onChange={(e) => { setCurrency(e.target.value); setMenuOpen(false); }}
-            className="ml-0 md:ml-4 bg-white text-gray-900 text-sm font-semibold p-2 rounded-md focus:outline-none"
+        </>
+      ) : (
+        <>
+          <div className="text-gray-300">{user.email}</div>
+          <button
+            onClick={handleLogout}
+            className="block w-full text-left bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
           >
-            <option value="NGN">₦ NGN</option>
-            <option value="USD">$ USD</option>
-          </select>
-        </div>
+            Logout
+          </button>
+        </>
+      )}
+
+      {/* Mobile cart + currency */}
+      <div className="flex items-center justify-between pt-2 border-t border-yellow-600">
+        <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400">
+          🛒 ({totalItems})
+        </button>
+        <span className="text-sm font-semibold text-gray-300">
+          {currencySymbol}{formattedPrice}
+        </span>
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
+        >
+          <option value="NGN">₦ NGN</option>
+          <option value="USD">$ USD</option>
+        </select>
       </div>
-    </nav>
+    </div>
+  </div>
+</nav>
+
   );
 };
+
+
+
+
 
 
 const HomePage = ({ navigateTo, addToCart }) => {
@@ -161,32 +230,32 @@ const HomePage = ({ navigateTo, addToCart }) => {
     if (categoryProducts.length === 0) return null;
 
     return (
-      <section key={category} className="my-8">
-        <h2 className="text-2xl font-bold text-center mb-6">
+      <section key={category} className="my-12">
+        <h2 className="text-3xl font-extrabold text-center mb-8 text-yellow-500 tracking-wide">
           {category.charAt(0).toUpperCase() + category.slice(1)}
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {categoryProducts.map((p) => (
             <div
               key={p.id}
-              className="bg-white rounded-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg cursor-pointer"
+              className="bg-black text-white rounded-xl overflow-hidden border border-yellow-600 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,215,0,0.5)] cursor-pointer"
               onClick={() => navigateTo("product", { product: p })}
             >
               {p.image && (
                 <img
                   src={p.image}
                   alt={p.name}
-                  className="w-full h-auto object-cover"
+                  className="w-full h-48 object-cover"
                 />
               )}
               <div className="p-4">
-                <p className="text-sm text-gray-500">{p.name}</p>
+                <p className="text-sm text-gray-400">{p.name}</p>
                 <p className="font-semibold text-sm mt-1">{p.description}</p>
-                <p className="text-lg font-bold mt-2">
+                <p className="text-lg font-bold mt-2 text-yellow-500">
                   ₦{p.price.toLocaleString()}
                 </p>
                 <button
-                  className="mt-4 w-full bg-gray-900 text-white text-sm font-semibold py-2 px-4 rounded-full hover:bg-gray-700"
+                  className="mt-4 w-full bg-yellow-600 hover:bg-yellow-500 text-black text-sm font-bold py-2 px-4 rounded-full transition"
                   onClick={(e) => {
                     e.stopPropagation();
                     addToCart(p);
@@ -207,37 +276,38 @@ const HomePage = ({ navigateTo, addToCart }) => {
   return (
     <main className="w-full">
       {/* Hero Section */}
-      <section className="w-full bg-gray-800 text-white px-4 sm:px-8 md:px-12 py-8 md:py-16 flex flex-row items-center justify-between relative overflow-hidden">
+      <section className="w-full bg-black text-white px-4 sm:px-8 md:px-12 py-16 flex flex-row md:flex-row items-center justify-between relative overflow-hidden">
         {/* Text content */}
-        <div className="w-1/2 flex flex-col items-start text-left z-10 p-2 sm:p-4">
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-2">
+        <div className="md:w-1/2 flex flex-col items-start text-left z-10 p-2 sm:p-4">
+          <h1 className="text-4xl md:text-6xl font-extrabold mb-4 text-yellow-500">
             Welcome to Vision Style’s
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-4">
+          <p className="text-xl md:text-3xl font-light mb-2 tracking-wide">
             AUTUMN 2025 LATEST
           </p>
-          <p className="mb-6 text-gray-300">
+          <p className="mb-6 text-gray-300 max-w-md">
             Discover trendy fashion at affordable prices.
           </p>
           <button
             onClick={() => navigateTo("shop")}
-            className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-full text-sm"
+            className="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-8 rounded-full text-lg transition shadow-md"
           >
             Shop Now &raquo;
           </button>
         </div>
 
         {/* Image */}
-        <div className="w-1/2 flex justify-center z-10 p-2 sm:p-4">
-          <img
-            src={image}
-            alt="A stylish person in front of a building, representing the brand image."
-            className="rounded-lg w-full h-auto max-w-sm sm:max-w-md md:max-w-full"
-          />
+        <div className="md:w-1/2 flex justify-center z-10 p-2 sm:p-4">
+         <img
+  src={image}
+  alt="A stylish person in front of a building, representing the brand image."
+  className="rounded-lg w-full h-auto max-w-sm sm:max-w-md md:max-w-lg shadow-[0_0_30px_rgba(255,215,0,0.3)]"
+/>
+
         </div>
 
         {/* Background overlay */}
-        <div className="absolute inset-0 bg-black opacity-50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-gray-900 to-black opacity-80"></div>
       </section>
 
       {/* Product Categories */}
@@ -245,10 +315,11 @@ const HomePage = ({ navigateTo, addToCart }) => {
         renderProductsByCategory(category, productsData)
       )}
 
-      <section className="container mx-auto my-8 flex justify-center">
+      {/* CTA */}
+      <section className="container mx-auto my-16 flex justify-center">
         <button
           onClick={() => navigateTo("shop")}
-          className="bg-gray-900 text-white font-bold py-3 px-8 rounded-full hover:bg-gray-700"
+          className="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-10 rounded-full text-lg shadow-md transition"
         >
           Go to Shop Page
         </button>
@@ -256,7 +327,6 @@ const HomePage = ({ navigateTo, addToCart }) => {
     </main>
   );
 };
-
 
 const ShopPage = ({ navigateTo, addToCart }) => {
   const { productsData } = useContext(ProductContext);
@@ -1144,14 +1214,13 @@ const Layout = ({ children }) => (
 
 export default function App() {
   const [isAuthReady, setIsAuthReady] = useState(true);
-  const [currentPage, setCurrentPage] = useState('home');
+  const [currentPage, setCurrentPage] = useState("home"); // 👈 now opens Login by default
   const [cartItems, setCartItems] = useState([]);
   const [productsData, setProductsData] = useState(initialProducts);
   const [ordersData, setOrdersData] = useState(initialOrders);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState('');
+  const [notification, setNotification] = useState("");
   const [pageProps, setPageProps] = useState({});
-
   const navigateTo = (page, props = {}) => {
     setCurrentPage(page);
     setPageProps(props);
