@@ -5,11 +5,11 @@ import image from "./assets/hero3.jpg"
 
 // Mock data for a front-end-only application
 const initialProducts = [
-  { id: '1', name: 'Vintage Jacket', description: 'Classic unisex denim jacket.', price: 15000, category: 'male & female wears', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Vintage+Jacket' },
-  { id: '2', name: 'Leather Boots', description: 'Stylish leather boots.', price: 25000, category: 'footwear', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Leather+Boots' },
-  { id: '3', name: 'Slim-Fit Jeans', description: 'Comfortable and trendy jeans.', price: 12000, category: 'jeans', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Slim-Fit+Jeans' },
-  { id: '4', name: 'Graphic T-Shirt', description: 'Vintage-style graphic tee.', price: 7500, category: 'jacket / t-shirts', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Graphic+Tee' },
-  { id: '5', name: 'Classic Wristwatch', description: 'Elegant wristwatch for everyday wear.', price: 18000, category: 'wristwatch', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Wristwatch' },
+  { id: '1', name: 'Vintage Jacket', description: 'Classic unisex denim jacket.', price: 15000, category: 'male & Female Wears', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Vintage+Jacket' },
+  { id: '2', name: 'Leather Boots', description: 'Stylish leather boots.', price: 25000, category: 'Footwear', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Leather+Boots' },
+  { id: '3', name: 'Slim-Fit Jeans', description: 'Comfortable and trendy jeans.', price: 12000, category: 'Jeans', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Slim-Fit+Jeans' },
+  { id: '4', name: 'Graphic T-Shirt', description: 'Vintage-style graphic tee.', price: 7500, category: 'Jacket / T-shirts', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Graphic+Tee' },
+  { id: '5', name: 'Classic Wristwatch', description: 'Elegant wristwatch for everyday wear.', price: 18000, category: 'Wristwatch', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Wristwatch' },
 ];
 
 
