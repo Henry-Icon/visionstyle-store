@@ -5,11 +5,13 @@ import image from "./assets/hero3.jpg"
 
 // Mock data for a front-end-only application
 const initialProducts = [
-  { id: '1', name: 'Vintage Jacket', description: 'Classic unisex denim jacket.', price: 15000, category: 'jackets', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Vintage+Jacket' },
+  { id: '1', name: 'Vintage Jacket', description: 'Classic unisex denim jacket.', price: 15000, category: 'male & female wears', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Vintage+Jacket' },
   { id: '2', name: 'Leather Boots', description: 'Stylish leather boots.', price: 25000, category: 'footwear', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Leather+Boots' },
   { id: '3', name: 'Slim-Fit Jeans', description: 'Comfortable and trendy jeans.', price: 12000, category: 'jeans', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Slim-Fit+Jeans' },
-  { id: '4', name: 'Graphic T-Shirt', description: 'Vintage-style graphic tee.', price: 7500, category: 't-shirts', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Graphic+Tee' },
+  { id: '4', name: 'Graphic T-Shirt', description: 'Vintage-style graphic tee.', price: 7500, category: 'jacket / t-shirts', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Graphic+Tee' },
+  { id: '5', name: 'Classic Wristwatch', description: 'Elegant wristwatch for everyday wear.', price: 18000, category: 'wristwatch', image: 'https://placehold.co/300x300/e5e7eb/1f2937?text=Wristwatch' },
 ];
+
 
 const initialOrders = [
   { id: 'ord_1', userId: 'user@example.com', items: [{ name: 'Vintage Jacket', qty: 1, price: 15000 }], totalPrice: 15000, status: 'Processing', deliveryDate: '2025-09-25' },
@@ -25,7 +27,6 @@ const OrderContext = createContext();
 // --- Components (all in one file) ---
 
 // src/components/Navbar.jsx
-
 
 const Navbar = ({ navigateTo }) => {
   const { totalPrice = 0, totalItems = 0 } = useContext(CartContext) || {};
@@ -49,171 +50,174 @@ const Navbar = ({ navigateTo }) => {
   };
 
   return (
-  <nav className="bg-black text-white sticky top-0 z-50 shadow-md">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex items-center h-16 gap-4">
-      {/* Left: Brand */}
-      <div className="flex-shrink-0">
-        <button
-          onClick={() => handleLinkClick("home")}
-          className="text-2xl font-extrabold tracking-tight text-yellow-500 hover:text-yellow-400 transition whitespace-nowrap"
-          aria-label="Vision Styles home"
-        >
-          Vision Style’s
-        </button>
-      </div>
-
-      {/* Center: Desktop links */}
-      <div className="hidden md:flex md:flex-1 md:justify-center md:items-center gap-6">
-        <button onClick={() => handleLinkClick("home")} className="hover:text-yellow-400 whitespace-nowrap">
-          Home
-        </button>
-        <button onClick={() => handleLinkClick("shop")} className="hover:text-yellow-400 whitespace-nowrap">
-          Shop
-        </button>
-        {isAdmin && (
-          <button onClick={() => handleLinkClick("admin")} className="hover:text-yellow-400 whitespace-nowrap">
-            Admin
-          </button>
-        )}
-        {isLoggedIn && (
-          <button onClick={() => handleLinkClick("my-orders")} className="hover:text-yellow-400 whitespace-nowrap">
-            My Orders
-          </button>
-        )}
-      </div>
-
-      {/* Right: auth + cart */}
-      <div className="hidden md:flex items-center gap-3">
-        <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400 whitespace-nowrap">
-          🛒 ({totalItems})
-        </button>
-
-        <span className="text-sm font-semibold text-gray-300 whitespace-nowrap">
-          {currencySymbol}{formattedPrice}
-        </span>
-
-        <select
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
-        >
-          <option value="NGN">₦ NGN</option>
-          <option value="USD">$ USD</option>
-        </select>
-
-        {!isLoggedIn ? (
-          <>
+    <nav className="bg-black text-white sticky top-0 z-50 shadow-md">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center h-16 gap-4">
+          {/* Left: Brand */}
+          <div className="flex-shrink-0">
             <button
-              onClick={() => handleLinkClick("login")}
-              className="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
+              onClick={() => handleLinkClick("home")}
+              className="text-2xl font-extrabold tracking-tight text-yellow-500 hover:text-yellow-400 transition whitespace-nowrap"
+              aria-label="Vision Styles home"
             >
-              Login
+              Vision Style’s
             </button>
+          </div>
+
+          {/* Center: Desktop links */}
+          <div className="hidden md:flex md:flex-1 md:justify-center md:items-center gap-6">
+            <button onClick={() => handleLinkClick("home")} className="hover:text-yellow-400 whitespace-nowrap">
+              Home
+            </button>
+            <button onClick={() => handleLinkClick("shop")} className="hover:text-yellow-400 whitespace-nowrap">
+              Shop
+            </button>
+            {isAdmin && (
+              <button onClick={() => handleLinkClick("admin")} className="hover:text-yellow-400 whitespace-nowrap">
+                Admin
+              </button>
+            )}
+            {isLoggedIn && (
+              <button onClick={() => handleLinkClick("my-orders")} className="hover:text-yellow-400 whitespace-nowrap">
+                My Orders
+              </button>
+            )}
+          </div>
+
+          {/* Right: auth + cart */}
+          <div className="hidden md:flex items-center gap-3">
+            <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400 whitespace-nowrap">
+              🛒 ({totalItems})
+            </button>
+
+            <span className="text-sm font-semibold text-gray-300 whitespace-nowrap">
+              {currencySymbol}{formattedPrice}
+            </span>
+
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
+            >
+              <option value="NGN">₦ NGN</option>
+              <option value="USD">$ USD</option>
+            </select>
+
+            {!isLoggedIn ? (
+              <>
+                <button
+                  onClick={() => handleLinkClick("login")}
+                  className="bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => handleLinkClick("signup")}
+                  className="bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
+                >
+                  Sign Up
+                </button>
+              </>
+            ) : (
+              <>
+                {/* ✅ Desktop user email in red */}
+                <span className="text-red-500 font-semibold whitespace-nowrap">{user.email}</span>
+                <button
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
+                >
+                  Logout
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Hamburger (mobile) */}
+          <div className="md:hidden ml-auto flex items-center gap-2">
+            {/* ✅ Mobile: show email outside the menu if logged in */}
+            {isLoggedIn && <span className="text-red-500 font-semibold text-sm">{user.email}</span>}
             <button
-              onClick={() => handleLinkClick("signup")}
-              className="bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
+              onClick={() => setMenuOpen((s) => !s)}
+              className="text-2xl p-2 text-yellow-500 hover:text-yellow-400"
             >
-              Sign Up
+              {menuOpen ? "✖" : "☰"}
             </button>
-          </>
-        ) : (
-          <>
-            <span className="text-gray-300 whitespace-nowrap">{user.email}</span>
-            <button
-              onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile dropdown */}
+      <div
+        className={`md:hidden transition-max-h duration-300 ease-in-out overflow-hidden ${
+          menuOpen ? "max-h-96" : "max-h-0"
+        } bg-black px-4 pb-4 border-t border-yellow-600`}
+      >
+        <div className="space-y-3 pt-3">
+          <button onClick={() => handleLinkClick("home")} className="block w-full text-left hover:text-yellow-400">
+            Home
+          </button>
+          <button onClick={() => handleLinkClick("shop")} className="block w-full text-left hover:text-yellow-400">
+            Shop
+          </button>
+          {isAdmin && (
+            <button onClick={() => handleLinkClick("admin")} className="block w-full text-left hover:text-yellow-400">
+              Admin
+            </button>
+          )}
+          {isLoggedIn && (
+            <button onClick={() => handleLinkClick("my-orders")} className="block w-full text-left hover:text-yellow-400">
+              My Orders
+            </button>
+          )}
+
+          {!isLoggedIn ? (
+            <>
+              <button
+                onClick={() => handleLinkClick("login")}
+                className="block w-full text-left bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
+              >
+                Login
+              </button>
+              <button
+                onClick={() => handleLinkClick("signup")}
+                className="block w-full text-left bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
+              >
+                Sign Up
+              </button>
+            </>
+          ) : (
+            <>
+              {/* ✅ Mobile: also show email inside dropdown */}
+              <div className="text-red-500 font-semibold">{user.email}</div>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
+              >
+                Logout
+              </button>
+            </>
+          )}
+
+          {/* Mobile cart + currency */}
+          <div className="flex items-center justify-between pt-2 border-t border-yellow-600">
+            <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400">
+              🛒 ({totalItems})
+            </button>
+            <span className="text-sm font-semibold text-gray-300">
+              {currencySymbol}{formattedPrice}
+            </span>
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
             >
-              Logout
-            </button>
-          </>
-        )}
+              <option value="NGN">₦ NGN</option>
+              <option value="USD">$ USD</option>
+            </select>
+          </div>
+        </div>
       </div>
-
-      {/* Hamburger (mobile) */}
-      <div className="md:hidden ml-auto">
-        <button
-          onClick={() => setMenuOpen((s) => !s)}
-          className="text-2xl p-2 text-yellow-500 hover:text-yellow-400"
-        >
-          {menuOpen ? "✖" : "☰"}
-        </button>
-      </div>
-    </div>
-  </div>
-
-  {/* Mobile dropdown */}
-  <div
-    className={`md:hidden transition-max-h duration-300 ease-in-out overflow-hidden ${
-      menuOpen ? "max-h-96" : "max-h-0"
-    } bg-black px-4 pb-4 border-t border-yellow-600`}
-  >
-    <div className="space-y-3 pt-3">
-      <button onClick={() => handleLinkClick("home")} className="block w-full text-left hover:text-yellow-400">
-        Home
-      </button>
-      <button onClick={() => handleLinkClick("shop")} className="block w-full text-left hover:text-yellow-400">
-        Shop
-      </button>
-      {isAdmin && (
-        <button onClick={() => handleLinkClick("admin")} className="block w-full text-left hover:text-yellow-400">
-          Admin
-        </button>
-      )}
-      {isLoggedIn && (
-        <button onClick={() => handleLinkClick("my-orders")} className="block w-full text-left hover:text-yellow-400">
-          My Orders
-        </button>
-      )}
-
-      {!isLoggedIn ? (
-        <>
-          <button
-            onClick={() => handleLinkClick("login")}
-            className="block w-full text-left bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-full shadow-md"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => handleLinkClick("signup")}
-            className="block w-full text-left bg-gray-800 hover:bg-yellow-600 hover:text-black font-bold py-2 px-4 rounded-full shadow-md"
-          >
-            Sign Up
-          </button>
-        </>
-      ) : (
-        <>
-          <div className="text-gray-300">{user.email}</div>
-          <button
-            onClick={handleLogout}
-            className="block w-full text-left bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-full"
-          >
-            Logout
-          </button>
-        </>
-      )}
-
-      {/* Mobile cart + currency */}
-      <div className="flex items-center justify-between pt-2 border-t border-yellow-600">
-        <button onClick={() => handleLinkClick("cart")} className="hover:text-yellow-400">
-          🛒 ({totalItems})
-        </button>
-        <span className="text-sm font-semibold text-gray-300">
-          {currencySymbol}{formattedPrice}
-        </span>
-        <select
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          className="bg-gray-900 border border-yellow-600 text-white text-sm font-semibold p-2 rounded-md"
-        >
-          <option value="NGN">₦ NGN</option>
-          <option value="USD">$ USD</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</nav>
-
+    </nav>
   );
 };
 
@@ -607,7 +611,7 @@ const CheckoutPage = ({ navigateTo, setNotification }) => {
   );
 };
 
-// ===================== LOGIN PAGE =====================
+/// ===================== LOGIN PAGE =====================
 export const LoginPage = ({ navigateTo, setNotification }) => {
   const { login } = useContext(AuthContext);
   const [email, setEmail] = useState("");
@@ -617,10 +621,17 @@ export const LoginPage = ({ navigateTo, setNotification }) => {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    // get stored users
-    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    // ✅ Special case: Admin can log in with ANY password
+    if (email === "admin@visionstyle.com") {
+      const adminUser = { id: "admin", email, role: "admin" };
+      login(adminUser);
+      setNotification("Logged in as Admin!");
+      navigateTo("admin");
+      return;
+    }
 
-    // check if user exists
+    // For normal users → check localStorage
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
     const foundUser = storedUsers.find(
       (u) => u.email === email && u.password === password
     );
@@ -628,7 +639,7 @@ export const LoginPage = ({ navigateTo, setNotification }) => {
     if (foundUser) {
       login(foundUser);
       setNotification("Logged in successfully!");
-      navigateTo(foundUser.role === "admin" ? "admin" : "home");
+      navigateTo("home");
     } else {
       setNotification("Invalid email or password.");
     }
@@ -668,7 +679,9 @@ export const LoginPage = ({ navigateTo, setNotification }) => {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 text-gray-500"
               >
-                <i className={showPassword ? "fas fa-eye" : "fas fa-eye-slash"}></i>
+                <i
+                  className={showPassword ? "fas fa-eye" : "fas fa-eye-slash"}
+                ></i>
               </button>
             </div>
           </div>
@@ -868,19 +881,28 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
   const { user } = useContext(AuthContext);
   const { productsData, setProductsData } = useContext(ProductContext);
   const { ordersData, setOrdersData } = useContext(OrderContext);
+
+  // ✅ Admin check (only email matters, any password allowed)
   const isAdmin = user?.email === "admin@visionstyle.com";
 
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
 
-  const categories = [...new Set(productsData.map((p) => p.category))];
+  // ✅ Predefined categories
+  const fixedCategories = [
+    "Male & Female Wears",
+    "Footwear",
+    "Jeans",
+    "Jacket / T-shirts",
+    "Wristwatch",
+  ];
 
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
     price: 0,
-    category: categories[0] || "",
-    image: "https://placehold.co/300x300/e5e7eb/1f2937?text=Product",
+    category: fixedCategories[0],
+    image: "", // Will hold base64 string
   });
 
   const handleInputChange = (e) => {
@@ -891,7 +913,19 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
     });
   };
 
-  // ✅ Add Product (POST to backend)
+  // ✅ Handle Image Upload (convert to Base64)
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewProduct({ ...newProduct, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // ✅ Add Product
   const handleAddProduct = async (e) => {
     e.preventDefault();
     try {
@@ -909,7 +943,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
     }
   };
 
-  // ✅ Delete Product (DELETE from backend)
+  // ✅ Delete Product
   const handleDeleteProduct = async (productId) => {
     try {
       await fetch(`http://localhost:5000/api/products/${productId}`, {
@@ -929,7 +963,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
     setNewProduct(product);
   };
 
-  // ✅ Update Product (PUT to backend)
+  // ✅ Update Product
   const handleUpdateProduct = async (e) => {
     e.preventDefault();
     try {
@@ -954,7 +988,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
     }
   };
 
-  // ✅ Update Order Status (PATCH to backend)
+  // ✅ Update Order Status
   const handleUpdateOrderStatus = async (orderId, newStatus) => {
     try {
       const res = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
@@ -1019,7 +1053,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
         </div>
       </div>
 
-      {/* Add/Edit Product Section */}
+      {/* Add/Edit Product */}
       <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
         <h3 className="text-xl font-bold mb-4">
           {isEditing ? "Edit Product" : "Add New Product"}
@@ -1070,22 +1104,32 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
               className="w-full p-2 border rounded-md"
               required
             >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
+              {fixedCategories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
                 </option>
               ))}
-              <option value="new category">New Category</option>
+              <option value="__new__">➕ Add New Category</option>
             </select>
+            {newProduct.category === "__new__" && (
+              <input
+                type="text"
+                placeholder="Enter new category"
+                className="mt-2 w-full p-2 border rounded-md"
+                onChange={(e) =>
+                  setNewProduct({ ...newProduct, category: e.target.value })
+                }
+              />
+            )}
           </div>
+
+          {/* File Upload */}
           <div>
-            <label className="block text-gray-700">Image URL</label>
+            <label className="block text-gray-700">Upload Image</label>
             <input
-              type="text"
-              name="image"
-              placeholder="Enter Image URL"
-              value={newProduct.image}
-              onChange={handleInputChange}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
               className="w-full p-2 border rounded-md"
             />
             {newProduct.image && (
@@ -1096,6 +1140,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
               />
             )}
           </div>
+
           <button
             type="submit"
             className="w-full bg-gray-900 text-white font-bold py-2 px-4 rounded-full hover:bg-gray-700"
@@ -1112,9 +1157,8 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
                   name: "",
                   description: "",
                   price: 0,
-                  category: categories[0] || "",
-                  image:
-                    "https://placehold.co/300x300/e5e7eb/1f2937?text=Product",
+                  category: fixedCategories[0],
+                  image: "",
                 });
               }}
               className="w-full bg-gray-500 text-white font-bold py-2 px-4 rounded-full hover:bg-gray-700 mt-2"
@@ -1125,7 +1169,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
         </form>
       </div>
 
-      {/* Manage Products Section */}
+      {/* Manage Products */}
       <div className="mt-8 bg-white p-6 rounded-lg shadow-lg mb-8">
         <h3 className="text-xl font-bold mb-4">Existing Products</h3>
         <ul className="divide-y divide-gray-200">
@@ -1135,7 +1179,8 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
               className="py-2 flex justify-between items-center"
             >
               <span>
-                {product.name} - {product.description}
+                <strong>{product.name}</strong> ({product.category}) - ₦
+                {product.price}
               </span>
               <div className="space-x-2">
                 <button
@@ -1156,7 +1201,7 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
         </ul>
       </div>
 
-      {/* Order Tracking Section */}
+      {/* Order Tracking */}
       <div className="mt-8 bg-white p-6 rounded-lg shadow-lg mb-8">
         <h3 className="text-xl font-bold mb-4">Order Tracking</h3>
         <ul className="divide-y divide-gray-200">
@@ -1188,7 +1233,6 @@ const AdminDashboard = ({ navigateTo, setNotification }) => {
     </div>
   );
 };
-
 
 const Layout = ({ children }) => (
   <div className="flex flex-col min-h-screen">
